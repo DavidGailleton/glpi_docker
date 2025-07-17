@@ -1,0 +1,5 @@
+# Environment file
+.env
+
+# GLPI directory - ignore everything except .gitkeep files
+glpi/**
