@@ -6,12 +6,16 @@ services:
       - 6379:6379
     volumes:
       - redis-cache:/data:rw
+    environment:
+      - TZ=Europe/Paris
   mariadb: 
     image: mariadb:11.4
     restart: unless-stopped
     volumes: 
       - glpi-db:/var/lib/mysql:rw
     env_file: ./.env
+    environment:
+      - TZ=Europe/Paris
     ports: 
       - 3306:3306
   php: 
@@ -24,6 +28,8 @@ services:
       - var-lib-glpi:/var/lib/glpi/:rw
       - ./php-fpm/conf.d:/usr/local/etc/php/conf.d:ro
     env_file: ./.env
+    environment:
+      - TZ=Europe/Paris
     depends_on: 
       - mariadb
     ports: 
@@ -38,8 +44,12 @@ services:
       - config:/etc/glpi/config/:rw
       - var-lib-glpi:/var/lib/glpi/:rw
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    environment:
+      - TZ=Europe/Paris
     ports: 
-      - "8080:8080"
+      - "80:80"
+      - "443:443"
     depends_on: 
       - php
 

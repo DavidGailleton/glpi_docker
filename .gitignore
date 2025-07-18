@@ -1,5 +1,10 @@
 # Environment file
 .env
 
-# GLPI directory - ignore everything except .gitkeep files
-glpi/**
+# SSL certificates - NEVER commit these!
+nginx/ssl/*.pem
+nginx/ssl/*.key
+nginx/ssl/*.crt
+nginx/ssl/*.pfx
+nginx/ssl/*.p12
+
