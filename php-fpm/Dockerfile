@@ -68,6 +68,14 @@ RUN mkdir -p /var/lib/glpi/_cache \
 	&& chown -R www-data:www-data /var/lib/glpi \
 	&& chmod -R 755 /var/lib/glpi
 
+# Install netcat for health checks in entrypoint script
+RUN apk add --no-cache netcat-openbsd
+
+# Copy and configure entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 EXPOSE 9000/tcp 
 
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["php-fpm"]
