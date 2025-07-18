@@ -5,12 +5,12 @@ services:
     ports: 
       - 6379:6379
     volumes:
-      - ./glpi/redis:/data:rw
+      - redis-cache:/data:rw
   mariadb: 
     image: mariadb:11.4
     restart: unless-stopped
     volumes: 
-      - ./glpi/mariadb:/var/lib/mysql:rw
+      - glpi-db:/var/lib/mysql:rw
     env_file: ./.env
     ports: 
       - 3306:3306
@@ -19,9 +19,8 @@ services:
     restart: unless-stopped
     volumes: 
       - glpi-root:/var/www/html/:rw
-      - ./glpi/glpi/marketplace:/var/www/html/marketplace:rw
-      - ./glpi/glpi/files:/var/lib/glpi:rw
-      - ./glpi/glpi/config:/etc/glpi/config/:rw
+      - marketplace:/var/www/html/marketplace:rw
+      - config:/etc/glpi/config/:rw
       - var-lib-glpi:/var/lib/glpi/:rw
       - ./php-fpm/conf.d:/usr/local/etc/php/conf.d:ro
     env_file: ./.env
@@ -35,9 +34,8 @@ services:
     restart: unless-stopped
     volumes: 
       - glpi-root:/var/www/html/:rw
-      - ./glpi/glpi/marketplace:/var/www/html/marketplace:rw
-      - ./glpi/glpi/files:/var/lib/glpi:rw
-      - ./glpi/glpi/config:/etc/glpi/config/:rw
+      - marketplace:/var/www/html/marketplace:rw
+      - config:/etc/glpi/config/:rw
       - var-lib-glpi:/var/lib/glpi/:rw
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
     ports: 
@@ -48,5 +46,9 @@ services:
 volumes: 
   glpi-root:
   var-lib-glpi:
+  config:
+  marketplace:
+  glpi-db:
+  redis-cache:
   
     

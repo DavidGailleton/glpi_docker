@@ -44,12 +44,14 @@ RUN docker-php-source delete
 
 WORKDIR /var/www/html
 
-ADD https://github.com/glpi-project/glpi/releases/download/10.0.18/glpi-10.0.18.tgz /tmp/
+ENV GLPI_VERSION=10.0.18
 
-RUN tar -zxf /tmp/glpi-10.0.18.tgz -C /tmp/ \
+ADD https://github.com/glpi-project/glpi/releases/download/${GLPI_VERSION}/glpi-${GLPI_VERSION}.tgz /tmp/
+
+RUN tar -zxf /tmp/glpi-${GLPI_VERSION}.tgz -C /tmp/ \
 	&& mv /tmp/glpi/* /var/www/html \
 	&& chown -R www-data:www-data /var/www/html \
-	&& rm -rf /tmp/glpi-10.0.18.tgz
+	&& rm -rf /tmp/glpi-${GLPI_VERSION}.tgz
 
 # Créer les dossiers GLPI nécessaires avec les bonnes permissions
 RUN mkdir -p /var/lib/glpi/_cache \
