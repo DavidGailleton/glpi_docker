@@ -44,7 +44,7 @@ RUN docker-php-source delete
 
 WORKDIR /var/www/html
 
-ENV GLPI_VERSION=10.0.18
+ENV GLPI_VERSION=10.0.19
 
 ADD https://github.com/glpi-project/glpi/releases/download/${GLPI_VERSION}/glpi-${GLPI_VERSION}.tgz /tmp/
 
