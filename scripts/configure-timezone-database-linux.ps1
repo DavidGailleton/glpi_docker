@@ -6,10 +6,10 @@ Write-Host "Configuration des timezones MariaDB pour GLPI (méthode Linux)" -For
 Write-Host "=============================================================" -ForegroundColor Green
 
 # Vérifier que Docker Compose est en cours d'exécution
-$mariadbRunning = docker ps --filter "name=mariadb" --format "{{.Names}}" | Select-String "mariadb"
+$mariadbRunning = docker compose ps --filter "name=mariadb" --format "{{.Names}}" 2>$null | Select-String "mariadb"
 if (-not $mariadbRunning) {
     Write-Host "Erreur : Le conteneur MariaDB n'est pas en cours d'exécution." -ForegroundColor Red
-    Write-Host "Veuillez d'abord lancer Docker Compose avec : docker-compose up -d" -ForegroundColor Yellow
+    Write-Host "Veuillez d'abord lancer Docker Compose avec : docker compose up -d" -ForegroundColor Yellow
     exit 1
 }
 
@@ -21,7 +21,7 @@ $rootPasswordPlain = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime
 Write-Host "`nÉtape 1 : Installation du package tzdata dans le conteneur..." -ForegroundColor Cyan
 
 # Installer tzdata dans le conteneur MariaDB s'il n'est pas présent
-docker exec mariadb bash -c "apt-get update && apt-get install -y tzdata"
+docker compose exec mariadb bash -c "apt-get update && apt-get install -y tzdata"
 
 Write-Host "`nÉtape 2 : Chargement des données de timezone depuis le système..." -ForegroundColor Cyan
 

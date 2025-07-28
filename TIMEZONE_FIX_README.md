@@ -1,5 +1,26 @@
 # Résolution de l'erreur "Access to timezone database (mysql) is not allowed" dans GLPI
 
+## 🚀 Guide rapide
+
+Pour résoudre rapidement l'erreur des timezones :
+
+**Sur Linux/macOS :**
+```bash
+chmod +x configure-timezone-database-simple.sh
+./configure-timezone-database-simple.sh
+```
+
+**Sur Windows (PowerShell) :**
+```powershell
+.\configure-timezone-database-simple.ps1
+```
+
+Puis redémarrez et videz le cache :
+```bash
+docker compose restart
+docker compose exec php rm -rf /var/www/html/files/_cache/*
+```
+
 ## Description du problème
 
 GLPI affiche l'erreur suivante dans les informations système :
@@ -17,16 +38,25 @@ J'ai créé plusieurs scripts pour résoudre ce problème :
 
 ### Scripts disponibles
 
-1. **`configure-timezone-database-linux.ps1`** (Recommandé pour Windows)
-   - Utilise les données de timezone du système Linux dans le conteneur
-   - Méthode la plus fiable
+1. **`configure-timezone-database-simple.ps1`** (🆕 Recommandé pour Windows)
+   - Détection automatique des commandes mariadb/mysql
+   - Compatible avec docker compose
+   - Gestion intelligente des erreurs
 
-2. **`configure-timezone-database.ps1`** (Alternative pour Windows)
-   - Télécharge les données de timezone depuis MariaDB
-   - Utiliser si la première méthode échoue
+2. **`configure-timezone-database-simple.sh`** (🆕 Recommandé pour Linux/macOS)
+   - Détection automatique des commandes mariadb/mysql
+   - Compatible avec docker compose
+   - Gestion intelligente des erreurs
 
-3. **`configure-timezone-database.sh`** (Pour Linux/macOS)
-   - Script bash équivalent
+3. **`configure-timezone-database.sh`** (Pour Linux/macOS - Version alternative)
+   - Script bash mis à jour qui utilise les commandes mariadb
+   - Compatible avec docker compose
+
+3. **`configure-timezone-database-linux.ps1`** (Alternative pour Windows)
+   - Version plus ancienne, utiliser si le script simple échoue
+
+4. **`configure-timezone-database.ps1`** (Archive)
+   - Version originale avec téléchargement des données
 
 ## Instructions d'utilisation
 
@@ -52,31 +82,38 @@ J'ai créé plusieurs scripts pour résoudre ce problème :
 
 3. Exécutez le script recommandé :
    ```powershell
-   .\configure-timezone-database-linux.ps1
+   .\configure-timezone-database-simple.ps1
    ```
 
 4. Suivez les instructions :
-   - Entrez le mot de passe root de MariaDB
-   - Entrez le mot de passe de l'utilisateur glpi (pour le test final)
+   - Entrez le mot de passe root de MariaDB quand demandé
 
-5. Une fois le script terminé, redémarrez les conteneurs :
+5. Une fois le script terminé, suivez les actions recommandées affichées :
    ```powershell
-   docker-compose restart
+   docker compose restart
+   docker compose exec php rm -rf /var/www/html/files/_cache/*
    ```
 
 ### Étapes pour Linux/macOS
 
 1. Rendez le script exécutable :
    ```bash
-   chmod +x configure-timezone-database.sh
+   chmod +x configure-timezone-database-simple.sh
    ```
 
 2. Exécutez le script :
    ```bash
-   ./configure-timezone-database.sh
+   ./configure-timezone-database-simple.sh
    ```
 
-3. Suivez les mêmes instructions que pour Windows
+3. Suivez les instructions :
+   - Entrez le mot de passe root de MariaDB quand demandé
+
+4. Suivez les actions recommandées affichées :
+   ```bash
+   docker compose restart
+   docker compose exec php rm -rf /var/www/html/files/_cache/*
+   ```
 
 ## Ce que font les scripts
 
@@ -87,18 +124,33 @@ Les scripts effectuent automatiquement les actions suivantes :
 3. **Attribution des droits** `SELECT` sur `mysql.time_zone_name` à l'utilisateur `glpi`
 4. **Vérification** que tout fonctionne correctement
 
-## Vérification manuelle (optionnel)
+## Vérification
+
+### Script de vérification automatique
+
+Un script de vérification rapide est disponible :
+
+```bash
+chmod +x check-timezone-status.sh
+./check-timezone-status.sh
+```
+
+Ce script vérifie automatiquement :
+- Le nombre de timezones chargées
+- Les droits de l'utilisateur glpi
+- L'accès effectif aux timezones
+
+### Vérification manuelle (optionnel)
 
 Si vous souhaitez vérifier manuellement :
 
 1. Connectez-vous au conteneur MariaDB :
    ```bash
-   docker exec -it mariadb bash
+   docker compose exec mariadb mariadb -uroot -p
    ```
 
 2. Vérifiez le nombre de timezones :
    ```sql
-   mysql -uroot -p
    SELECT COUNT(*) FROM mysql.time_zone_name;
    ```
 
@@ -109,11 +161,21 @@ Si vous souhaitez vérifier manuellement :
 
 ## Dépannage
 
+### Erreur "mysql: command not found" ou "mariadb: command not found"
+
+Cette erreur se produit car les nouvelles images MariaDB utilisent la commande `mariadb` au lieu de `mysql`. Les scripts mis à jour gèrent automatiquement cette différence.
+
+**Solution :**
+- Utilisez le script `configure-timezone-database-simple.ps1` (Windows) ou la version mise à jour de `configure-timezone-database.sh` (Linux/macOS)
+
 ### Si le script échoue au chargement des timezones
 
-1. Essayez l'autre script PowerShell (`configure-timezone-database.ps1`)
-2. Vérifiez que le conteneur MariaDB est bien en cours d'exécution
-3. Assurez-vous que le mot de passe root est correct
+1. Vérifiez que les conteneurs sont bien lancés avec `docker compose ps`
+2. Assurez-vous que le mot de passe root est correct
+3. Essayez de vous connecter manuellement pour diagnostiquer :
+   ```bash
+   docker compose exec mariadb mariadb -uroot -p
+   ```
 
 ### Si l'erreur persiste après l'exécution du script
 

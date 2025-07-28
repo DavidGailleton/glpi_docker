@@ -38,10 +38,10 @@ A Docker Compose setup for GLPI with Redis caching, MariaDB, and HTTPS support.
 2. **Generate SSL certificates:**
    ```bash
    # Windows PowerShell
-   .\generate-self-signed-cert.ps1
+   .\scripts\generate-self-signed-cert.ps1
    
    # Linux/macOS/WSL
-   ./generate-self-signed-cert.sh
+   ./scripts/generate-self-signed-cert.sh
    ```
 
 3. **Start the containers:**
@@ -63,12 +63,12 @@ If you need to manually configure or reconfigure the Redis cache:
 
 **Windows PowerShell:**
 ```powershell
-.\configure-redis-cache.ps1
+.\scripts\configure-redis-cache.ps1
 ```
 
 **Linux/macOS/WSL:**
 ```bash
-./configure-redis-cache.sh
+./scripts/configure-redis-cache.sh
 ```
 
 ### How it Works
@@ -198,7 +198,7 @@ docker-compose exec redis redis-cli FLUSHALL
 ### Redis cache not configured
 If the automatic configuration fails, run the manual configuration script:
 ```bash
-./configure-redis-cache.sh  # or .ps1 for Windows
+./scripts/configure-redis-cache.sh  # or .ps1 for Windows
 ```
 
 ### Certificate issues
@@ -210,6 +210,32 @@ If the automatic configuration fails, run the manual configuration script:
 1. Check logs: `docker-compose logs [service-name]`
 2. Ensure all required ports are free
 3. Verify `.env` file exists with proper values
+
+## Maintenance & Updates
+
+This project includes comprehensive maintenance tools to make updates and cleanup easier:
+
+### Quick Commands (Using Make)
+```bash
+make help       # Show all available commands
+make update     # Update containers with automatic backup
+make backup     # Create backup of data and configs
+make clean      # Clean containers (preserves data)
+make clean-all  # Clean everything including data
+```
+
+### Manual Scripts
+- **Windows**: `.\scripts\cleanup.ps1`, `.\scripts\update.ps1`
+- **Linux/macOS**: `./scripts/cleanup.sh`, `./scripts/update.sh`
+
+### Key Features
+- **Automatic backups** before updates
+- **Smart cleanup** with data preservation options
+- **Build cache management** for PHP-FPM
+- **Health checks** after updates
+- **Force mode** for CI/CD pipelines
+
+For detailed maintenance procedures, see [MAINTENANCE.md](MAINTENANCE.md).
 
 ## Security Notes
 

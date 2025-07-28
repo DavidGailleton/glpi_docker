@@ -1,5 +1,7 @@
 # Environment file
 .env
+.env.local
+.env.*.local
 
 # SSL certificates - NEVER commit these!
 nginx/ssl/*.pem
@@ -7,4 +9,63 @@ nginx/ssl/*.key
 nginx/ssl/*.crt
 nginx/ssl/*.pfx
 nginx/ssl/*.p12
+nginx/ssl/*.cer
+nginx/ssl/*.csr
+
+# Backup directories
+backup_*/
+backups/
+*.backup
+*.bak
+
+# Database dumps
+*.sql
+*.sql.gz
+*.dump
+
+# Build hashes and temporary files
+.last-php-build-hash
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Docker volumes (if mounted locally)
+volumes/
+data/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-*
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+logs/
+
+# Node modules (if any frontend build tools are added)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python cache (if any Python scripts are used)
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+env/
+
+# GLPI specific
+glpi/files/
+glpi/config/config_db.php
+glpi/config/local_define.php
+
+# System files
+.directory
+desktop.ini
 
