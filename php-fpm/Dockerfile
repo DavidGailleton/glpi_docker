@@ -54,20 +54,19 @@ RUN tar -zxf /tmp/glpi-${GLPI_VERSION}.tgz -C /tmp/ \
 	&& rm -rf /tmp/glpi-${GLPI_VERSION}.tgz
 
 # Créer les dossiers GLPI nécessaires avec les bonnes permissions
-RUN mkdir -p /var/lib/glpi/_cache \
-	&& mkdir -p /var/lib/glpi/_cron \
-	&& mkdir -p /var/lib/glpi/_dumps \
-	&& mkdir -p /var/lib/glpi/_graphs \
-	&& mkdir -p /var/lib/glpi/_lock \
-	&& mkdir -p /var/lib/glpi/_pictures \
-	&& mkdir -p /var/lib/glpi/_plugins \
-	&& mkdir -p /var/lib/glpi/_rss \
-	&& mkdir -p /var/lib/glpi/_sessions \
-	&& mkdir -p /var/lib/glpi/_tmp \
-	&& mkdir -p /var/lib/glpi/_uploads \
-	&& chown -R www-data:www-data /var/lib/glpi \
-  && chown -R www-data:www-data /var/www/html \
-	&& chmod -R 755 /var/lib/glpi
+RUN mkdir -p /var/www/html/files/_cache \
+	&& mkdir -p /var/www/html/files/_cron \
+	&& mkdir -p /var/www/html/files/_dumps \
+	&& mkdir -p /var/www/html/files/_graphs \
+	&& mkdir -p /var/www/html/files/_lock \
+	&& mkdir -p /var/www/html/files/_pictures \
+	&& mkdir -p /var/www/html/files/_plugins \
+	&& mkdir -p /var/www/html/files/_rss \
+	&& mkdir -p /var/www/html/files/_sessions \
+	&& mkdir -p /var/www/html/files/_tmp \
+	&& mkdir -p /var/www/html/files/_uploads \
+	&& chown -R www-data:www-data /var/www/html \
+	&& chmod -R 755 /var/www/html/files
 
 # Install netcat for health checks in entrypoint script
 RUN apk add --no-cache netcat-openbsd

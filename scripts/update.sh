@@ -150,6 +150,10 @@ if containers_running; then
     echo -e "${GREEN}Containers stopped.${NC}"
 fi
 
+# Remove install directory
+echo -e "\n${YELLOW}Removing install directory...${NC}"
+docker volume rm glpi_docker_glpi-install
+
 # Start containers with updated images
 echo -e "\n${YELLOW}Starting containers with updated images...${NC}"
 docker-compose up -d

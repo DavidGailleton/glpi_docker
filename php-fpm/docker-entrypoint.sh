@@ -59,10 +59,10 @@ fi
 
 # Create necessary directories if they don't exist
 for dir in _cache _cron _dumps _graphs _lock _pictures _plugins _rss _sessions _tmp _uploads; do
-    if [ ! -d "/var/lib/glpi/$dir" ]; then
-        mkdir -p "/var/lib/glpi/$dir"
-        chown www-data:www-data "/var/lib/glpi/$dir"
-        chmod 755 "/var/lib/glpi/$dir"
+    if [ ! -d "/var/www/html/files/$dir" ]; then
+        mkdir -p "/var/www/html/files/$dir"
+        chown www-data:www-data "/var/www/html/files/$dir"
+        chmod 755 "/var/www/html/files/$dir"
     fi
 done
 

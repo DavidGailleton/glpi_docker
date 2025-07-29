@@ -23,9 +23,10 @@ services:
     restart: unless-stopped
     volumes: 
       - marketplace:/var/www/html/marketplace:rw
-      - config:/etc/glpi/config/:rw
-      - var-lib-glpi:/var/lib/glpi/:rw
+      - config:/var/www/html/config/:rw
+      - files:/var/www/html/files/:rw
       - ./php-fpm/conf.d:/usr/local/etc/php/conf.d:ro
+      - glpi-install:/var/www/html/install/:rw
     env_file: ./.env
     environment:
       - TZ=Europe/Paris
@@ -39,8 +40,8 @@ services:
     restart: unless-stopped
     volumes: 
       - marketplace:/var/www/html/marketplace:rw
-      - config:/etc/glpi/config/:rw
-      - var-lib-glpi:/var/lib/glpi/:rw
+      - config:/var/www/html/config/:rw
+      - files:/var/www/html/files/:rw
     environment:
       - TZ=Europe/Paris
     ports: 
@@ -58,10 +59,11 @@ services:
 #      - TZ=Europe/Paris
 
 volumes: 
-  var-lib-glpi:
   config:
   marketplace:
+  files:
   glpi-db:
   redis-cache:
+  glpi-install:
   
     
