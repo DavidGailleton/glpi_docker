@@ -4,7 +4,7 @@ A Docker Compose setup for GLPI with Redis caching, MariaDB, and HTTPS support.
 
 ## Features
 
-- **GLPI 10.0.18** with PHP 8.3
+- **GLPI 10.0.19** with PHP 8.4
 - **MariaDB 11.4** for database
 - **Redis 7.0** for caching
 - **Nginx** with HTTPS support
@@ -37,9 +37,6 @@ A Docker Compose setup for GLPI with Redis caching, MariaDB, and HTTPS support.
 
 2. **Generate SSL certificates:**
    ```bash
-   # Windows PowerShell
-   .\scripts\generate-self-signed-cert.ps1
-   
    # Linux/macOS/WSL
    ./scripts/generate-self-signed-cert.sh
    ```
@@ -61,11 +58,6 @@ The Redis cache is automatically configured when the PHP container starts if GLP
 ### Manual Configuration
 If you need to manually configure or reconfigure the Redis cache:
 
-**Windows PowerShell:**
-```powershell
-.\scripts\configure-redis-cache.ps1
-```
-
 **Linux/macOS/WSL:**
 ```bash
 ./scripts/configure-redis-cache.sh
@@ -83,7 +75,7 @@ If you need to manually configure or reconfigure the Redis cache:
 ## Container Services
 
 ### PHP-FPM
-- **Image:** Custom build based on `php:8.3-fpm-alpine`
+- **Image:** Custom build based on `php:8.4-fpm-alpine`
 - **Extensions:** GD, intl, mysqli, pdo_mysql, exif, bz2, zip, ldap, opcache, sodium, redis, apcu
 - **Exposed Port:** 9000
 - **Features:**
@@ -131,9 +123,8 @@ Common timezone values:
 Self-signed certificates are suitable for development and testing:
 
 ```bash
-# Generate certificates (choose your platform)
-.\generate-self-signed-cert.ps1  # Windows
-./generate-self-signed-cert.sh    # Linux/macOS
+# Generate certificates
+./scripts/generate-self-signed-cert.sh    # Linux/macOS/WSL
 ```
 
 ### Using Custom Certificates
@@ -150,10 +141,10 @@ See [nginx/ssl/README-SSL.md](nginx/ssl/README-SSL.md) for detailed SSL configur
 
 ## Volumes
 
-- `glpi-root`: GLPI application files
+- `config`: GLPI configuration files
 - `marketplace`: GLPI marketplace plugins
-- `config`: GLPI configuration
-- `var-lib-glpi`: GLPI data (uploads, cache, sessions, etc.)
+- `files`: GLPI data (uploads, cache, sessions, etc.)
+- `glpi-install`: GLPI installation files
 - `glpi-db`: MariaDB database files
 - `redis-cache`: Redis persistent data
 
@@ -198,7 +189,7 @@ docker-compose exec redis redis-cli FLUSHALL
 ### Redis cache not configured
 If the automatic configuration fails, run the manual configuration script:
 ```bash
-./scripts/configure-redis-cache.sh  # or .ps1 for Windows
+./scripts/configure-redis-cache.sh
 ```
 
 ### Certificate issues
@@ -225,8 +216,7 @@ make clean-all  # Clean everything including data
 ```
 
 ### Manual Scripts
-- **Windows**: `.\scripts\cleanup.ps1`, `.\scripts\update.ps1`
-- **Linux/macOS**: `./scripts/cleanup.sh`, `./scripts/update.sh`
+- **Linux/macOS/WSL**: `./scripts/cleanup.sh`, `./scripts/update.sh`
 
 ### Key Features
 - **Automatic backups** before updates
