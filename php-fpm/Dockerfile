@@ -66,6 +66,7 @@ RUN mkdir -p /var/lib/glpi/_cache \
 	&& mkdir -p /var/lib/glpi/_tmp \
 	&& mkdir -p /var/lib/glpi/_uploads \
 	&& chown -R www-data:www-data /var/lib/glpi \
+  && chown -R www-data:www-data /var/www/html \
 	&& chmod -R 755 /var/lib/glpi
 
 # Install netcat for health checks in entrypoint script

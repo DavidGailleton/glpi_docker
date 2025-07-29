@@ -66,6 +66,20 @@ for dir in _cache _cron _dumps _graphs _lock _pictures _plugins _rss _sessions _
     fi
 done
 
+# Fix marketplace volume ownership
+echo "Fixing marketplace volume ownership..."
+if [ -d "/var/www/html/marketplace" ]; then
+    chown -R www-data:www-data /var/www/html/marketplace
+    chmod -R 755 /var/www/html/marketplace
+    echo "Marketplace directory ownership set to www-data:www-data"
+else
+    echo "Marketplace directory not found, creating it..."
+    mkdir -p /var/www/html/marketplace
+    chown -R www-data:www-data /var/www/html/marketplace
+    chmod -R 755 /var/www/html/marketplace
+    echo "Marketplace directory created with www-data:www-data ownership"
+fi
+
 echo "Starting PHP-FPM..."
 
 # Execute the original command (php-fpm)
