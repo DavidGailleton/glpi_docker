@@ -22,7 +22,6 @@ services:
     build: php-fpm/.
     restart: unless-stopped
     volumes: 
-      - glpi-root:/var/www/html/:rw
       - marketplace:/var/www/html/marketplace:rw
       - config:/etc/glpi/config/:rw
       - var-lib-glpi:/var/lib/glpi/:rw
@@ -36,15 +35,12 @@ services:
       - "9000:9000"
 
   nginx: 
-    image: nginx:stable-alpine
+    build: nginx/.
     restart: unless-stopped
     volumes: 
-      - glpi-root:/var/www/html/:rw
       - marketplace:/var/www/html/marketplace:rw
       - config:/etc/glpi/config/:rw
       - var-lib-glpi:/var/lib/glpi/:rw
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro
     environment:
       - TZ=Europe/Paris
     ports: 
@@ -62,7 +58,6 @@ services:
 #      - TZ=Europe/Paris
 
 volumes: 
-  glpi-root:
   var-lib-glpi:
   config:
   marketplace:
