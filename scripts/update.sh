@@ -69,7 +69,7 @@ confirm_action() {
 
 # Function to check if containers are running
 containers_running() {
-    docker-compose ps -q 2>/dev/null | grep -q .
+    docker compose ps -q 2>/dev/null | grep -q .
 }
 
 # Create backup if requested
@@ -103,7 +103,7 @@ if [ "$BACKUP" = true ] && [ "$NO_BACKUP" = false ]; then
             if [ -f ".env" ]; then
                 root_password=$(grep "^MARIADB_ROOT_PASSWORD=" .env | cut -d'=' -f2-)
                 if [ -n "$root_password" ]; then
-                    docker-compose exec -T mariadb mysqldump -u root -p"$root_password" glpi > "$backup_dir/glpi_database.sql" 2>/dev/null
+                    docker compose exec -T mariadb mysqldump -u root -p"$root_password" glpi > "$backup_dir/glpi_database.sql" 2>/dev/null
                     if [ $? -eq 0 ]; then
                         echo -e "${GREEN}Database exported successfully${NC}"
                     else
@@ -121,7 +121,7 @@ fi
 
 # Pull latest images
 echo -e "\n${YELLOW}Pulling latest Docker images...${NC}"
-docker-compose pull
+docker compose pull
 
 # Check if PHP Dockerfile has changed
 php_dockerfile="php-fpm/Dockerfile"
@@ -135,7 +135,7 @@ if [ -f "$php_dockerfile" ]; then
     
     if [ "$current_hash" != "$last_hash" ] || ! docker images -q "glpi_docker_php" 2>/dev/null | grep -q .; then
         echo -e "\n${YELLOW}Rebuilding PHP-FPM image...${NC}"
-        docker-compose build --no-cache php
+        docker compose build --no-cache php
         echo "$current_hash" > ".last-php-build-hash"
         echo -e "${GREEN}PHP-FPM image rebuilt.${NC}"
     else
@@ -146,7 +146,7 @@ fi
 # Stop containers if running
 if containers_running; then
     echo -e "\n${YELLOW}Stopping containers...${NC}"
-    docker-compose stop
+    docker compose stop
     echo -e "${GREEN}Containers stopped.${NC}"
 fi
 
@@ -156,7 +156,7 @@ docker volume rm glpi_docker_glpi-install
 
 # Start containers with updated images
 echo -e "\n${YELLOW}Starting containers with updated images...${NC}"
-docker-compose up -d
+docker compose up -d
 
 # Wait for services to be ready
 echo -e "\n${YELLOW}Waiting for services to be ready...${NC}"
@@ -164,15 +164,15 @@ sleep 10
 
 # Check container status
 echo -e "\n${YELLOW}Checking container status...${NC}"
-docker-compose ps
+docker compose ps
 
 # Show logs of any failed containers
-failed_containers=$(docker-compose ps | grep "Exit" | awk '{print $1}')
+failed_containers=$(docker compose ps | grep "Exit" | awk '{print $1}')
 if [ -n "$failed_containers" ]; then
     echo -e "\n${RED}Some containers failed to start. Showing logs:${NC}"
     for container in $failed_containers; do
         echo -e "\n${YELLOW}Logs for $container:${NC}"
-        docker-compose logs --tail=20 "$container"
+        docker compose logs --tail=20 "$container"
     done
 else
     echo -e "\n${GREEN}All containers are running successfully!${NC}"

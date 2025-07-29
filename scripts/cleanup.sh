@@ -68,8 +68,8 @@ confirm_action() {
 
 # Stop and remove containers
 echo -e "\n${YELLOW}Stopping and removing containers...${NC}"
-if docker-compose ps -q 2>/dev/null | grep -q .; then
-    docker-compose down
+if docker compose ps -q 2>/dev/null | grep -q .; then
+    docker compose down
     echo -e "${GREEN}Containers stopped and removed.${NC}"
 else
     echo -e "${GRAY}No running containers found.${NC}"
@@ -79,7 +79,7 @@ fi
 if [ "$KEEP_VOLUMES" = false ] && [ "$KEEP_DATA" = false ]; then
     if confirm_action "Remove all Docker volumes? This will DELETE ALL DATA!"; then
         echo -e "\n${YELLOW}Removing Docker volumes...${NC}"
-        docker-compose down -v
+        docker compose down -v
         
         # Also remove any orphaned volumes
         volumes=$(docker volume ls -q -f "name=glpi_docker_" 2>/dev/null)

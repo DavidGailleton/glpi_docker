@@ -10,7 +10,7 @@ echo -e "\e[32m=============================================\e[0m"
 # Vérifier que Docker Compose est en cours d'exécution
 if ! docker ps --filter "name=mariadb" --format "{{.Names}}" | grep -q "mariadb"; then
     echo -e "\e[31mErreur : Le conteneur MariaDB n'est pas en cours d'exécution.\e[0m"
-    echo -e "\e[33mVeuillez d'abord lancer Docker Compose avec : docker-compose up -d\e[0m"
+    echo -e "\e[33mVeuillez d'abord lancer Docker Compose avec : docker compose up -d\e[0m"
     exit 1
 fi
 
@@ -85,7 +85,7 @@ fi
 
 echo -e "\n\e[32m✅ Configuration terminée !\e[0m"
 echo -e "\e[33mVeuillez redémarrer les conteneurs Docker pour appliquer complètement les changements :\e[0m"
-echo -e "\e[36mdocker-compose restart\e[0m"
+echo -e "\e[36mdocker compose restart\e[0m"
 
 # Nettoyage des variables
 unset MYSQL_ROOT_PASSWORD

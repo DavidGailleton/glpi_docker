@@ -71,32 +71,32 @@ setup:
 
 # Container management
 up:
-	docker-compose up -d
+	docker compose up -d
 	@echo ""
 	@echo "✓ Containers started"
 	@echo "Access GLPI at: https://localhost"
 
 down:
-	docker-compose down
+	docker compose down
 
 start:
-	docker-compose start
+	docker compose start
 
 stop:
-	docker-compose stop
+	docker compose stop
 
 restart:
-	docker-compose restart
+	docker compose restart
 
 # Monitoring
 status:
-	docker-compose ps
+	docker compose ps
 
 logs:
-	docker-compose logs
+	docker compose logs
 
 logs-f:
-	docker-compose logs -f
+	docker compose logs -f
 
 # Maintenance
 update:
@@ -129,7 +129,7 @@ clean:
 	elif [ -f ./scripts/cleanup.ps1 ]; then \
 		powershell -ExecutionPolicy Bypass -File ./scripts/cleanup.ps1 -KeepVolumes; \
 	else \
-		docker-compose down; \
+		docker compose down; \
 		docker system prune -f; \
 	fi
 
@@ -143,7 +143,7 @@ clean-all:
 		elif [ -f ./scripts/cleanup.ps1 ]; then \
 			powershell -ExecutionPolicy Bypass -File ./scripts/cleanup.ps1 -Force; \
 		else \
-			docker-compose down -v; \
+			docker compose down -v; \
 			docker system prune -af; \
 		fi \
 	else \
@@ -153,15 +153,15 @@ clean-all:
 # Database commands
 db-shell:
 	@if [ -f .env ]; then \
-		. ./.env && docker-compose exec mariadb mysql -u root -p$$MARIADB_ROOT_PASSWORD; \
+		. ./.env && docker compose exec mariadb mysql -u root -p$$MARIADB_ROOT_PASSWORD; \
 	else \
-		docker-compose exec mariadb mysql -u root -p; \
+		docker compose exec mariadb mysql -u root -p; \
 	fi
 
 db-backup:
 	@mkdir -p backups
 	@if [ -f .env ]; then \
-		. ./.env && docker-compose exec -T mariadb mysqldump -u root -p$$MARIADB_ROOT_PASSWORD glpi > "backups/glpi_$$(date +%Y%m%d_%H%M%S).sql"; \
+		. ./.env && docker compose exec -T mariadb mysqldump -u root -p$$MARIADB_ROOT_PASSWORD glpi > "backups/glpi_$$(date +%Y%m%d_%H%M%S).sql"; \
 		echo "✓ Database backed up to backups/glpi_$$(date +%Y%m%d_%H%M%S).sql"; \
 	else \
 		echo "⚠️  .env file not found - cannot read database password"; \
@@ -169,7 +169,7 @@ db-backup:
 
 # GLPI specific
 glpi-shell:
-	docker-compose exec php /bin/bash
+	docker compose exec php /bin/bash
 
 redis-config:
 	@if [ -f ./scripts/configure-redis-cache.sh ]; then \
@@ -184,7 +184,7 @@ redis-config:
 # Quick access to common tasks
 .PHONY: build rebuild
 build:
-	docker-compose build
+	docker compose build
 
 rebuild:
-	docker-compose build --no-cache 
+	docker compose build --no-cache 

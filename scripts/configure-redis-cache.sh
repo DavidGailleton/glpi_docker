@@ -5,16 +5,16 @@
 
 echo "Configuring Redis cache for GLPI..."
 
-# Check if docker-compose is running
-if ! docker-compose ps | grep -q "php.*Up"; then
+# Check if docker compose is running
+if ! docker compose ps | grep -q "php.*Up"; then
     echo "Error: PHP container is not running. Please start the containers first:"
-    echo "  docker-compose up -d"
+    echo "  docker compose up -d"
     exit 1
 fi
 
 # Execute the cache configuration command in the PHP container
 echo "Executing cache configuration in PHP container..."
-docker-compose exec -T php su -s /bin/sh www-data -c "cd /var/www/html && php bin/console cache:configure --context core --dsn redis://redis:6379/1"
+docker compose exec -T php su -s /bin/sh www-data -c "cd /var/www/html && php bin/console cache:configure --context core --dsn redis://redis:6379/1"
 
 if [ $? -eq 0 ]; then
     echo "Redis cache configured successfully!"
@@ -22,7 +22,7 @@ if [ $? -eq 0 ]; then
     # Optionally, test the Redis connection
     echo ""
     echo "Testing Redis connection..."
-    docker-compose exec -T php su -s /bin/sh www-data -c "cd /var/www/html && php bin/console cache:test --context core" 2>/dev/null || {
+    docker compose exec -T php su -s /bin/sh www-data -c "cd /var/www/html && php bin/console cache:test --context core" 2>/dev/null || {
         echo "Note: Cache test command might not be available in your GLPI version"
     }
 else
