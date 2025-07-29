@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 COPY conf.d/*.ini $PHP_INI_DIR/conf.d/
 
