@@ -69,3 +69,6 @@ glpi/config/local_define.php
 .directory
 desktop.ini
 
+# Volume backups
+volume-backups/
+

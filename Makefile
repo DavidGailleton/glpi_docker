@@ -1,7 +1,7 @@
 # GLPI Docker Makefile
 # Provides easy commands for common tasks
 
-.PHONY: help up down start stop restart status logs clean clean-all update backup setup
+.PHONY: help up down start stop restart status logs clean clean-all update backup setup backup-volumes backup-volumes-verbose list-backups list-volumes restore-volumes
 
 # Default target
 help:
@@ -34,6 +34,13 @@ help:
 	@echo "GLPI:"
 	@echo "  make glpi-shell  - Access GLPI container shell"
 	@echo "  make redis-config - Configure Redis cache"
+	@echo ""
+	@echo "Volume Backups:"
+	@echo "  make backup-volumes        - Create backup of all Docker volumes"
+	@echo "  make backup-volumes-verbose - Create backup with detailed output"
+	@echo "  make list-backups         - List available volume backups"
+	@echo "  make list-volumes         - Show current volumes and sizes"
+	@echo "  make restore-volumes      - Restore volumes from backup"
 
 # Setup commands
 setup:
@@ -120,6 +127,53 @@ backup:
 		echo "Creating manual backup..."; \
 		mkdir -p "backup_$$(date +%Y%m%d_%H%M%S)"; \
 		cp -r .env php-fpm/conf.d nginx/conf.d "backup_$$(date +%Y%m%d_%H%M%S)/"; \
+	fi
+
+# Volume backup commands
+backup-volumes:
+	@if [ -f ./scripts/backup-volumes.sh ]; then \
+		chmod +x ./scripts/backup-volumes.sh; \
+		./scripts/backup-volumes.sh backup; \
+	else \
+		echo "Volume backup script not found"; \
+		exit 1; \
+	fi
+
+backup-volumes-verbose:
+	@if [ -f ./scripts/backup-volumes.sh ]; then \
+		chmod +x ./scripts/backup-volumes.sh; \
+		./scripts/backup-volumes.sh backup --verbose; \
+	else \
+		echo "Volume backup script not found"; \
+		exit 1; \
+	fi
+
+list-backups:
+	@if [ -f ./scripts/backup-volumes.sh ]; then \
+		chmod +x ./scripts/backup-volumes.sh; \
+		./scripts/backup-volumes.sh list; \
+	else \
+		echo "Volume backup script not found"; \
+		exit 1; \
+	fi
+
+list-volumes:
+	@if [ -f ./scripts/backup-volumes.sh ]; then \
+		chmod +x ./scripts/backup-volumes.sh; \
+		./scripts/backup-volumes.sh list-volumes; \
+	else \
+		echo "Volume backup script not found"; \
+		exit 1; \
+	fi
+
+restore-volumes:
+	@read -p "Enter backup name to restore: " backup; \
+	if [ -f ./scripts/backup-volumes.sh ]; then \
+		chmod +x ./scripts/backup-volumes.sh; \
+		./scripts/backup-volumes.sh restore $$backup; \
+	else \
+		echo "Volume backup script not found"; \
+		exit 1; \
 	fi
 
 clean:
