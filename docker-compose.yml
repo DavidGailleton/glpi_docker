@@ -42,6 +42,8 @@ services:
       - marketplace:/var/www/html/marketplace:rw
       - config:/var/www/html/config/:rw
       - files:/var/www/html/files/:rw
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
     environment:
       - TZ=Europe/Paris
     ports: 
