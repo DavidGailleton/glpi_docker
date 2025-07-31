@@ -1,6 +1,6 @@
 FROM nginx:stable-alpine
 
-ENV GLPI_VERSION=10.0.18
+ENV GLPI_VERSION=10.0.19
 
 # Install required tools for extracting GLPI
 RUN apk update && apk add --no-cache \

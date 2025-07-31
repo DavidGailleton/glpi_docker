@@ -1,6 +1,6 @@
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
-ENV GLPI_VERSION=10.0.18
+ENV GLPI_VERSION=10.0.19
 
 COPY conf.d/*.ini $PHP_INI_DIR/conf.d/
 
