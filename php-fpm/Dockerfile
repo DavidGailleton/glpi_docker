@@ -1,4 +1,6 @@
-FROM php:8.4-fpm-alpine
+FROM php:8.3-fpm-alpine
+
+ENV GLPI_VERSION=10.0.18
 
 COPY conf.d/*.ini $PHP_INI_DIR/conf.d/
 
@@ -43,8 +45,6 @@ RUN apk add --no-cache pcre-dev ${PHPIZE_DEPS} \
 RUN docker-php-source delete
 
 WORKDIR /var/www/html
-
-ENV GLPI_VERSION=10.0.19
 
 ADD https://github.com/glpi-project/glpi/releases/download/${GLPI_VERSION}/glpi-${GLPI_VERSION}.tgz /tmp/
 

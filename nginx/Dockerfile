@@ -1,19 +1,12 @@
 FROM nginx:stable-alpine
 
-# Copy nginx configuration files
-COPY conf.d/*.conf /etc/nginx/conf.d/
-
-# Copy SSL certificates
-COPY ssl /etc/nginx/ssl/
+ENV GLPI_VERSION=10.0.18
 
 # Install required tools for extracting GLPI
 RUN apk update && apk add --no-cache \
     tar \
     gzip \
     curl
-
-# Set GLPI version
-ENV GLPI_VERSION=10.0.19
 
 # Create the web directory
 RUN mkdir -p /var/www/html
